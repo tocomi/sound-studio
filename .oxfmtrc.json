@@ -3,5 +3,9 @@
   "singleQuote": true,
   "semi": false,
   "printWidth": 100,
+  "sortTailwindcss": {
+    "stylesheet": "./src/index.css",
+    "functions": ["clsx", "cn"]
+  },
   "ignorePatterns": [".claude/**", "dist/**", "**/*.json", "**/*.md"]
 }

@@ -1,0 +1,10 @@
+@import 'tailwindcss';
+
+/* ダーク基調（DESIGN.md）。トークンは実装が進んだら @theme に寄せる。 */
+:root {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-neutral-950 text-neutral-100;
+}
