@@ -1,6 +1,5 @@
 import { cn } from '../../lib/cn.ts'
-
-export type ThemeMode = 'dark' | 'light'
+import type { ThemeMode } from '../../theme/use-theme.ts'
 
 type ThemeToggleProps = {
   themeMode: ThemeMode

@@ -40,6 +40,8 @@ pnpm format:check # oxfmt --check
 
 - 言語は TypeScript + React 19（React Compiler 有効 → 手動の `useMemo`/`useCallback` メモ化は基本不要）。
 - セクションは常に**配列**として扱う（v1 から複数対応）。データモデルは ARCHITECTURE.md の `Section` / `FileSettings` 型に従う。
-- コンポーネントは関心ごとに分割（`MediaStage` / `Transport` / `SpeedControl` / `SectionList` 等）。
+- コンポーネントは関心ごとに分割（`MediaStage` / `Transport` / `SpeedControl` / `SectionList` 等）。`app.tsx` は **画面合成のみ**を行う薄いルートに保ち、フィーチャー UI やアプリ状態をインラインで抱え込まない。
+- **配置はレイヤーで分ける**：ビューは `components/`（1 コンポーネント 1 ディレクトリ + stories）、アプリ状態のスライスを持つ hook は関心ごとのトップレベルディレクトリ（`player/` / `theme/` …）に置く。`components/` 配下に hook を混在させない。詳細は [ARCHITECTURE.md](./docs/ARCHITECTURE.md) のディレクトリ方針を参照。
+- **型の置き場所**：複数レイヤーをまたぐドメイン型は `types.ts`（`LoadedMedia` / 将来の `Section` / `FileSettings`）。単一の hook やコンポーネントが所有する型はそのファイルへ同居させる（例：`ThemeMode` は `theme/use-theme.ts` が所有）。ビュー（葉コンポーネント）からドメイン型を import させない。
 - Component / hook の主体には必ず JSDoc を付ける。内容は**何をするか**を簡潔に書いたうえで、**なぜその単位が必要か**（責務境界・設計上の理由）も書く。
 - 既存ファイルの記述スタイル（命名・コメント量）に合わせる。
