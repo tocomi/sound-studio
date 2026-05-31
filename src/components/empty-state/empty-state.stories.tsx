@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+
 import { fn } from 'storybook/test'
+
 import { EmptyState } from './empty-state.tsx'
 
 const meta = {

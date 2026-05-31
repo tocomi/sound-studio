@@ -1,5 +1,6 @@
-import { ThemeToggle } from '../theme-toggle/theme-toggle.tsx'
 import type { ThemeMode } from '@/theme/use-theme.ts'
+
+import { ThemeToggle } from '../theme-toggle/theme-toggle.tsx'
 
 type AppHeaderProps = {
   fileName: string | null

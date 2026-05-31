@@ -1,4 +1,5 @@
 import type { Preview } from '@storybook/react-vite'
+
 // アプリ本体と同じ Tailwind / ダークトークンを Storybook 上でも適用する。
 import '../src/index.css'
 

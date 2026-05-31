@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+
 import { AppHeader } from '@/components/app-header/app-header.tsx'
 import { EmptyState } from '@/components/empty-state/empty-state.tsx'
 import { MediaStage } from '@/components/media-stage/media-stage.tsx'

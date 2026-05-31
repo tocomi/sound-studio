@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+
 import { useState } from 'react'
 import { fn } from 'storybook/test'
+
 import { SpeedControl } from './speed-control.tsx'
 
 const meta = {

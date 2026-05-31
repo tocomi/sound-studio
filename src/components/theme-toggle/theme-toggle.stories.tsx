@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+
 import { useState } from 'react'
 import { fn } from 'storybook/test'
+
 import type { ThemeMode } from '@/theme/use-theme.ts'
+
 import { ThemeToggle } from './theme-toggle.tsx'
 
 const meta = {

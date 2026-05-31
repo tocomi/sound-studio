@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+
 import { SectionList } from './section-list.tsx'
 
 const meta = {
