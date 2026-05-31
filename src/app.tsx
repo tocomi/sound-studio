@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { EmptyState } from './components/empty-state/empty-state.tsx'
 import { MediaStage } from './components/media-stage/media-stage.tsx'
 import { SpeedControl } from './components/speed-control/speed-control.tsx'
@@ -26,6 +26,10 @@ function App() {
   const [playbackRate, setPlaybackRate] = useState(1)
   const [themeMode, setThemeMode] = useState<ThemeMode>(getInitialThemeMode)
   const player = usePlayer(mediaElement, playbackRate)
+
+  useLayoutEffect(() => {
+    document.documentElement.dataset.theme = themeMode
+  }, [themeMode])
 
   useEffect(() => {
     return () => {
@@ -58,10 +62,7 @@ function App() {
   }
 
   return (
-    <main
-      className="min-h-dvh overflow-hidden bg-studio-page text-studio-text"
-      data-theme={themeMode}
-    >
+    <main className="min-h-dvh overflow-hidden bg-studio-page text-studio-text">
       <div className="mx-auto flex min-h-dvh w-full max-w-7xl flex-col gap-6 px-5 py-6 sm:px-8">
         <header className="flex flex-wrap items-end justify-between gap-4 border-b border-studio-border pb-5">
           <div className="min-w-0">

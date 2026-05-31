@@ -42,25 +42,6 @@
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --studio-page: #211b17;
-    --studio-surface: #2a231f;
-    --studio-surface-muted: #332b25;
-    --studio-surface-raised: #312923;
-    --studio-border: #514238;
-    --studio-border-strong: #bc8e70;
-    --studio-text: #f4eee7;
-    --studio-text-muted: #c9bcb0;
-    --studio-text-soft: #a99688;
-    --studio-accent: #bc8e70;
-    --studio-accent-hover: #d0a182;
-    --studio-accent-contrast: #1e1713;
-    --studio-track: #493c34;
-    --studio-media: #0c0a09;
-  }
-}
-
 [data-theme='dark'] {
   --studio-page: #211b17;
   --studio-surface: #2a231f;

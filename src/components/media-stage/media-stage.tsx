@@ -30,6 +30,7 @@ export function MediaStage({ loadedMedia, onMediaElementChange }: MediaStageProp
             <p className="wrap-break-words mt-3 text-2xl font-semibold text-studio-text">
               {loadedMedia.file.name}
             </p>
+            {/* 装飾用のバー。本物の波形表示は意図的に future scope として扱う。 */}
             <div className="mx-auto mt-8 flex h-16 max-w-sm items-end justify-center gap-1.5">
               {Array.from({ length: 21 }, (_, index) => (
                 <span

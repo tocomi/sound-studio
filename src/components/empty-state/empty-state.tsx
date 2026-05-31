@@ -1,7 +1,12 @@
 import { useState } from 'react'
+import { cn } from '../../lib/cn.ts'
 
 type EmptyStateProps = {
   onFileSelected: (file: File) => void
+}
+
+function isPlayableMedia(file: File) {
+  return file.type.startsWith('audio/') || file.type.startsWith('video/')
 }
 
 /**
@@ -14,7 +19,7 @@ export function EmptyState({ onFileSelected }: EmptyStateProps) {
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const selectedFile = event.target.files?.[0]
 
-    if (selectedFile) {
+    if (selectedFile && isPlayableMedia(selectedFile)) {
       onFileSelected(selectedFile)
     }
   }
@@ -34,7 +39,7 @@ export function EmptyState({ onFileSelected }: EmptyStateProps) {
 
     const selectedFile = event.dataTransfer.files[0]
 
-    if (selectedFile?.type.startsWith('audio/') || selectedFile?.type.startsWith('video/')) {
+    if (selectedFile && isPlayableMedia(selectedFile)) {
       onFileSelected(selectedFile)
     }
   }
@@ -42,11 +47,12 @@ export function EmptyState({ onFileSelected }: EmptyStateProps) {
   return (
     <section className="grid flex-1 place-items-center py-10">
       <label
-        className={
+        className={cn(
+          'group relative flex w-full max-w-3xl cursor-pointer flex-col items-center overflow-hidden rounded-lg border px-8 py-16 text-center transition focus-within:ring-2 focus-within:ring-studio-border-strong focus-within:ring-offset-2 focus-within:ring-offset-studio-page focus-within:outline-none motion-reduce:transition-none',
           isDragging
-            ? 'group relative flex w-full max-w-3xl cursor-pointer flex-col items-center overflow-hidden rounded-lg border border-studio-border-strong bg-studio-surface-muted px-8 py-16 text-center transition focus-within:ring-2 focus-within:ring-studio-border-strong focus-within:ring-offset-2 focus-within:ring-offset-studio-page focus-within:outline-none motion-reduce:transition-none'
-            : 'group relative flex w-full max-w-3xl cursor-pointer flex-col items-center overflow-hidden rounded-lg border border-dashed border-studio-border bg-studio-surface px-8 py-16 text-center transition focus-within:border-studio-border-strong focus-within:ring-2 focus-within:ring-studio-border-strong focus-within:ring-offset-2 focus-within:ring-offset-studio-page focus-within:outline-none hover:border-studio-border-strong hover:bg-studio-surface-raised motion-reduce:transition-none'
-        }
+            ? 'border-studio-border-strong bg-studio-surface-muted'
+            : 'border-dashed border-studio-border bg-studio-surface focus-within:border-studio-border-strong hover:border-studio-border-strong hover:bg-studio-surface-raised',
+        )}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
