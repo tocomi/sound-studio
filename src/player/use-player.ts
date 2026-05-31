@@ -99,6 +99,14 @@ export function usePlayer(mediaElement: HTMLMediaElement | null, playbackRate: n
     setCurrentTime(clampedTime)
   }
 
+  function seekBy(deltaTime: number) {
+    if (!mediaElement) {
+      return
+    }
+
+    seek(mediaElement.currentTime + deltaTime)
+  }
+
   return {
     currentTime,
     duration,
@@ -106,5 +114,6 @@ export function usePlayer(mediaElement: HTMLMediaElement | null, playbackRate: n
     pause,
     play,
     seek,
+    seekBy,
   }
 }

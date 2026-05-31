@@ -4,6 +4,7 @@ import { MediaStage } from './components/media-stage/media-stage.tsx'
 import { SpeedControl } from './components/speed-control/speed-control.tsx'
 import { ThemeToggle, type ThemeMode } from './components/theme-toggle/theme-toggle.tsx'
 import { Transport } from './components/transport/transport.tsx'
+import { useKeyboardShortcuts } from './player/use-keyboard-shortcuts.ts'
 import { usePlayer } from './player/use-player.ts'
 import type { LoadedMedia } from './types.ts'
 
@@ -24,8 +25,18 @@ function App() {
   const [loadedMedia, setLoadedMedia] = useState<LoadedMedia | null>(null)
   const [mediaElement, setMediaElement] = useState<HTMLMediaElement | null>(null)
   const [playbackRate, setPlaybackRate] = useState(1)
+  const [seekStepSeconds, setSeekStepSeconds] = useState(5)
   const [themeMode, setThemeMode] = useState<ThemeMode>(getInitialThemeMode)
   const player = usePlayer(mediaElement, playbackRate)
+
+  useKeyboardShortcuts({
+    isEnabled: Boolean(mediaElement),
+    isPlaying: player.isPlaying,
+    seekStepSeconds,
+    onPause: player.pause,
+    onPlay: player.play,
+    onSeekBy: player.seekBy,
+  })
 
   useLayoutEffect(() => {
     document.documentElement.dataset.theme = themeMode
@@ -79,7 +90,6 @@ function App() {
             ) : null}
           </div>
           <div className="flex items-center gap-2">
-            <ThemeToggle themeMode={themeMode} onThemeModeToggle={toggleThemeMode} />
             {loadedMedia ? (
               <button
                 className="touch-manipulation rounded-md border border-studio-border bg-studio-surface-raised px-3 py-2 text-sm font-medium text-studio-accent transition hover:border-studio-border-strong hover:bg-studio-surface-muted focus-visible:ring-2 focus-visible:ring-studio-border-strong focus-visible:ring-offset-2 focus-visible:ring-offset-studio-page focus-visible:outline-none motion-reduce:transition-none"
@@ -89,6 +99,7 @@ function App() {
                 別のファイルを開く
               </button>
             ) : null}
+            <ThemeToggle themeMode={themeMode} onThemeModeToggle={toggleThemeMode} />
           </div>
         </header>
 
@@ -100,9 +111,13 @@ function App() {
                 currentTime={player.currentTime}
                 duration={player.duration}
                 isPlaying={player.isPlaying}
+                seekStepSeconds={seekStepSeconds}
                 onPause={player.pause}
                 onPlay={player.play}
                 onSeek={player.seek}
+                onSeekBackward={() => player.seekBy(-seekStepSeconds)}
+                onSeekForward={() => player.seekBy(seekStepSeconds)}
+                onSeekStepSecondsChange={setSeekStepSeconds}
               />
               <SpeedControl playbackRate={playbackRate} onPlaybackRateChange={setPlaybackRate} />
             </div>

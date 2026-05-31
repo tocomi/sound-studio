@@ -2,9 +2,13 @@ type TransportProps = {
   currentTime: number
   duration: number
   isPlaying: boolean
+  seekStepSeconds: number
   onPause: () => void
   onPlay: () => void
   onSeek: (time: number) => void
+  onSeekBackward: () => void
+  onSeekForward: () => void
+  onSeekStepSecondsChange: (seekStepSeconds: number) => void
 }
 
 function formatTime(time: number) {
@@ -28,17 +32,29 @@ export function Transport({
   currentTime,
   duration,
   isPlaying,
+  seekStepSeconds,
   onPause,
   onPlay,
   onSeek,
+  onSeekBackward,
+  onSeekForward,
+  onSeekStepSecondsChange,
 }: TransportProps) {
   function handleSeek(event: React.ChangeEvent<HTMLInputElement>) {
     onSeek(Number(event.target.value))
   }
 
+  function handleSeekStepChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const nextSeekStepSeconds = Number(event.target.value)
+
+    if (Number.isFinite(nextSeekStepSeconds)) {
+      onSeekStepSecondsChange(Math.min(Math.max(nextSeekStepSeconds, 1), 30))
+    }
+  }
+
   return (
     <section className="rounded-lg border border-studio-border bg-studio-surface p-4">
-      <div className="flex flex-wrap items-center gap-4">
+      <div className="flex flex-wrap items-center gap-3">
         <button
           className="grid size-12 touch-manipulation place-items-center rounded-full bg-studio-accent text-sm font-bold text-studio-accent-contrast transition hover:bg-studio-accent-hover focus-visible:ring-2 focus-visible:ring-studio-border-strong focus-visible:ring-offset-2 focus-visible:ring-offset-studio-surface focus-visible:outline-none motion-reduce:transition-none"
           type="button"
@@ -51,10 +67,10 @@ export function Transport({
             {isPlaying ? 'II' : '▶'}
           </span>
         </button>
-        <div className="min-w-28 text-sm font-medium text-studio-text-muted tabular-nums">
+        <div className="min-w-24 text-sm font-medium text-studio-text-muted tabular-nums">
           {formatTime(currentTime)} / {formatTime(duration)}
         </div>
-        <div className="relative min-w-56 flex-1">
+        <div className="relative min-w-40 flex-1">
           <input
             className="range-control w-full touch-manipulation focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-studio-border-strong"
             type="range"
@@ -65,6 +81,46 @@ export function Transport({
             value={Math.min(currentTime, duration || currentTime)}
             onChange={handleSeek}
           />
+        </div>
+        <div className="flex h-10 items-center overflow-hidden rounded-md border border-studio-border bg-studio-surface-raised">
+          <button
+            className="grid h-10 w-11 touch-manipulation place-items-center border-r border-studio-border text-sm font-bold text-studio-text-muted transition hover:bg-studio-surface-muted focus-visible:ring-2 focus-visible:ring-studio-border-strong focus-visible:outline-none focus-visible:ring-inset motion-reduce:transition-none"
+            type="button"
+            aria-label={`${seekStepSeconds}秒戻る`}
+            title={`← ${seekStepSeconds}秒戻る`}
+            onClick={onSeekBackward}
+          >
+            <span aria-hidden="true" className="leading-none">
+              ←
+            </span>
+          </button>
+          <label className="flex h-10 items-center gap-1.5 px-2 text-sm font-medium text-studio-text-muted">
+            <input
+              className="w-9 bg-transparent text-center font-semibold text-studio-text tabular-nums focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-studio-border-strong"
+              type="number"
+              name="seek-step-seconds"
+              autoComplete="off"
+              inputMode="numeric"
+              min="1"
+              max="30"
+              step="1"
+              aria-label="巻き戻し・早送りの秒数"
+              value={seekStepSeconds}
+              onChange={handleSeekStepChange}
+            />
+            <span>sec</span>
+          </label>
+          <button
+            className="grid h-10 w-11 touch-manipulation place-items-center border-l border-studio-border text-sm font-bold text-studio-text-muted transition hover:bg-studio-surface-muted focus-visible:ring-2 focus-visible:ring-studio-border-strong focus-visible:outline-none focus-visible:ring-inset motion-reduce:transition-none"
+            type="button"
+            aria-label={`${seekStepSeconds}秒進む`}
+            title={`→ ${seekStepSeconds}秒進む`}
+            onClick={onSeekForward}
+          >
+            <span aria-hidden="true" className="leading-none">
+              →
+            </span>
+          </button>
         </div>
       </div>
     </section>
