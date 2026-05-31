@@ -37,10 +37,10 @@ export function Transport({
   }
 
   return (
-    <section className="rounded-lg border border-white/10 bg-neutral-900/80 p-4">
+    <section className="rounded-lg border border-studio-border bg-studio-surface p-4">
       <div className="flex flex-wrap items-center gap-4">
         <button
-          className="grid size-11 touch-manipulation place-items-center rounded-full bg-cyan-300 text-sm font-bold text-neutral-950 transition hover:bg-cyan-200 focus-visible:ring-2 focus-visible:ring-cyan-200 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900 focus-visible:outline-none motion-reduce:transition-none"
+          className="grid size-12 touch-manipulation place-items-center rounded-full bg-studio-accent text-sm font-bold text-studio-accent-contrast transition hover:bg-studio-accent-hover focus-visible:ring-2 focus-visible:ring-studio-border-strong focus-visible:ring-offset-2 focus-visible:ring-offset-studio-surface focus-visible:outline-none motion-reduce:transition-none"
           type="button"
           aria-label={isPlaying ? '停止' : '再生'}
           aria-pressed={isPlaying}
@@ -51,13 +51,12 @@ export function Transport({
             {isPlaying ? 'II' : '▶'}
           </span>
         </button>
-        <div className="min-w-28 text-sm text-neutral-300 tabular-nums">
+        <div className="min-w-28 text-sm font-medium text-studio-text-muted tabular-nums">
           {formatTime(currentTime)} / {formatTime(duration)}
         </div>
         <div className="relative min-w-56 flex-1">
-          <div className="pointer-events-none absolute inset-x-0 top-1/2 h-2 -translate-y-1/2 rounded-full bg-neutral-800" />
           <input
-            className="relative z-10 w-full touch-manipulation accent-cyan-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-200"
+            className="range-control w-full touch-manipulation focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-studio-border-strong"
             type="range"
             aria-label="再生位置"
             min="0"

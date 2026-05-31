@@ -1,10 +1,132 @@
 @import 'tailwindcss';
 
-/* ダーク基調（DESIGN.md）。トークンは実装が進んだら @theme に寄せる。 */
+@theme inline {
+  --color-studio-page: var(--studio-page);
+  --color-studio-surface: var(--studio-surface);
+  --color-studio-surface-muted: var(--studio-surface-muted);
+  --color-studio-surface-raised: var(--studio-surface-raised);
+  --color-studio-border: var(--studio-border);
+  --color-studio-border-strong: var(--studio-border-strong);
+  --color-studio-text: var(--studio-text);
+  --color-studio-text-muted: var(--studio-text-muted);
+  --color-studio-text-soft: var(--studio-text-soft);
+  --color-studio-accent: var(--studio-accent);
+  --color-studio-accent-hover: var(--studio-accent-hover);
+  --color-studio-accent-contrast: var(--studio-accent-contrast);
+  --color-studio-track: var(--studio-track);
+  --color-studio-media: var(--studio-media);
+}
+
 :root {
+  color-scheme: light dark;
+  font-family:
+    ui-sans-serif, 'Avenir Next', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', Meiryo, sans-serif;
+}
+
+:root,
+[data-theme='light'] {
+  --studio-page: #f4f1ea;
+  --studio-surface: #fbfaf7;
+  --studio-surface-muted: #f6f1e8;
+  --studio-surface-raised: #ffffff;
+  --studio-border: #d8d0c7;
+  --studio-border-strong: #9b806b;
+  --studio-text: #1c1917;
+  --studio-text-muted: #57534e;
+  --studio-text-soft: #78716c;
+  --studio-accent: #4a3328;
+  --studio-accent-hover: #5d4235;
+  --studio-accent-contrast: #fffaf3;
+  --studio-track: #e7e2dc;
+  --studio-media: #0c0a09;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --studio-page: #211b17;
+    --studio-surface: #2a231f;
+    --studio-surface-muted: #332b25;
+    --studio-surface-raised: #312923;
+    --studio-border: #514238;
+    --studio-border-strong: #bc8e70;
+    --studio-text: #f4eee7;
+    --studio-text-muted: #c9bcb0;
+    --studio-text-soft: #a99688;
+    --studio-accent: #bc8e70;
+    --studio-accent-hover: #d0a182;
+    --studio-accent-contrast: #1e1713;
+    --studio-track: #493c34;
+    --studio-media: #0c0a09;
+  }
+}
+
+[data-theme='dark'] {
+  --studio-page: #211b17;
+  --studio-surface: #2a231f;
+  --studio-surface-muted: #332b25;
+  --studio-surface-raised: #312923;
+  --studio-border: #514238;
+  --studio-border-strong: #bc8e70;
+  --studio-text: #f4eee7;
+  --studio-text-muted: #c9bcb0;
+  --studio-text-soft: #a99688;
+  --studio-accent: #bc8e70;
+  --studio-accent-hover: #d0a182;
+  --studio-accent-contrast: #1e1713;
+  --studio-track: #493c34;
+  --studio-media: #0c0a09;
   color-scheme: dark;
 }
 
 body {
-  @apply bg-neutral-950 text-neutral-100;
+  @apply bg-studio-page text-studio-text;
+}
+
+button:not(:disabled),
+input[type='file']:not(:disabled) {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled {
+  cursor: not-allowed;
+}
+
+.range-control {
+  @apply h-6 cursor-pointer appearance-none bg-transparent;
+}
+
+.range-control::-webkit-slider-runnable-track {
+  height: 0.5rem;
+  border: 1px solid var(--studio-border);
+  border-radius: 999px;
+  background: var(--studio-track);
+}
+
+.range-control::-webkit-slider-thumb {
+  width: 1rem;
+  height: 1rem;
+  margin-top: -0.3rem;
+  appearance: none;
+  border: 2px solid var(--studio-surface);
+  border-radius: 999px;
+  background: var(--studio-accent);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--studio-accent) 24%, transparent);
+}
+
+.range-control::-moz-range-track {
+  height: 0.5rem;
+  border: 1px solid var(--studio-border);
+  border-radius: 999px;
+  background: var(--studio-track);
+}
+
+.range-control::-moz-range-thumb {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--studio-surface);
+  border-radius: 999px;
+  background: var(--studio-accent);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--studio-accent) 24%, transparent);
 }

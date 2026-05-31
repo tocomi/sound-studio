@@ -11,23 +11,36 @@ type MediaStageProps = {
  */
 export function MediaStage({ loadedMedia, onMediaElementChange }: MediaStageProps) {
   return (
-    <section className="overflow-hidden rounded-lg border border-white/10 bg-black">
+    <section className="overflow-hidden rounded-lg border border-studio-border bg-studio-surface-raised">
       {loadedMedia.kind === 'video' ? (
-        <video
-          className="aspect-video h-full w-full bg-black object-contain"
-          controls={false}
-          ref={onMediaElementChange}
-          src={loadedMedia.url}
-        />
+        <div className="relative bg-studio-media">
+          <video
+            className="aspect-video h-full w-full bg-black object-contain"
+            controls={false}
+            ref={onMediaElementChange}
+            src={loadedMedia.url}
+          />
+        </div>
       ) : (
-        <div className="grid min-h-72 place-items-center bg-[radial-gradient(circle_at_center,rgba(34,211,238,0.16),transparent_55%)] px-6 py-12">
+        <div className="grid min-h-72 place-items-center bg-studio-surface-muted px-6 py-12">
           <div className="w-full max-w-lg text-center">
-            <p className="text-sm font-medium text-cyan-300">音声ファイル</p>
-            <p className="wrap-break-words mt-3 text-2xl font-semibold text-white">
+            <p className="text-xs font-semibold tracking-[0.2em] text-studio-text-soft uppercase">
+              audio file
+            </p>
+            <p className="wrap-break-words mt-3 text-2xl font-semibold text-studio-text">
               {loadedMedia.file.name}
             </p>
+            <div className="mx-auto mt-8 flex h-16 max-w-sm items-end justify-center gap-1.5">
+              {Array.from({ length: 21 }, (_, index) => (
+                <span
+                  key={index}
+                  className="w-1.5 rounded-full bg-studio-border-strong"
+                  style={{ height: `${22 + Math.abs(Math.sin(index * 1.7)) * 42}px` }}
+                />
+              ))}
+            </div>
             <audio
-              className="mt-8 w-full"
+              className="sr-only"
               controls={false}
               ref={onMediaElementChange}
               src={loadedMedia.url}

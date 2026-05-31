@@ -16,9 +16,9 @@ export function SpeedControl({ playbackRate, onPlaybackRateChange }: SpeedContro
   }
 
   return (
-    <section className="rounded-lg border border-white/10 bg-neutral-900/80 p-4">
+    <section className="rounded-lg border border-studio-border bg-studio-surface p-4">
       <div className="flex flex-wrap items-center gap-3">
-        <label className="text-sm font-semibold text-neutral-200" htmlFor="speed-control">
+        <label className="text-sm font-semibold text-studio-text" htmlFor="speed-control">
           Speed
         </label>
         <div className="flex flex-wrap gap-2">
@@ -30,8 +30,8 @@ export function SpeedControl({ playbackRate, onPlaybackRateChange }: SpeedContro
                 key={speedPreset}
                 className={
                   isSelected
-                    ? 'h-9 min-w-16 rounded-md bg-cyan-300 px-3 text-sm font-semibold text-neutral-950 transition hover:bg-cyan-200 focus-visible:ring-2 focus-visible:ring-cyan-200 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900 focus-visible:outline-none motion-reduce:transition-none'
-                    : 'h-9 min-w-16 rounded-md border border-white/10 bg-neutral-800 px-3 text-sm font-semibold text-neutral-300 transition hover:border-white/20 hover:bg-neutral-700 focus-visible:ring-2 focus-visible:ring-cyan-200 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900 focus-visible:outline-none motion-reduce:transition-none'
+                    ? 'h-9 min-w-16 rounded-md bg-studio-accent px-3 text-sm font-semibold text-studio-accent-contrast transition hover:bg-studio-accent-hover focus-visible:ring-2 focus-visible:ring-studio-border-strong focus-visible:ring-offset-2 focus-visible:ring-offset-studio-surface focus-visible:outline-none motion-reduce:transition-none'
+                    : 'h-9 min-w-16 rounded-md border border-studio-border bg-studio-surface-raised px-3 text-sm font-semibold text-studio-text-muted transition hover:border-studio-border-strong hover:bg-studio-surface-muted focus-visible:ring-2 focus-visible:ring-studio-border-strong focus-visible:ring-offset-2 focus-visible:ring-offset-studio-surface focus-visible:outline-none motion-reduce:transition-none'
                 }
                 type="button"
                 aria-pressed={isSelected}
@@ -43,7 +43,7 @@ export function SpeedControl({ playbackRate, onPlaybackRateChange }: SpeedContro
           })}
         </div>
         <input
-          className="min-w-56 flex-1 touch-manipulation accent-cyan-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-200"
+          className="range-control min-w-56 flex-1 touch-manipulation focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-studio-border-strong"
           id="speed-control"
           type="range"
           min="0.25"
@@ -53,7 +53,7 @@ export function SpeedControl({ playbackRate, onPlaybackRateChange }: SpeedContro
           onChange={handlePlaybackRateChange}
         />
         <output
-          className="min-w-16 rounded-md bg-neutral-800 px-3 py-2 text-center text-sm font-semibold text-cyan-200 tabular-nums"
+          className="min-w-16 rounded-md bg-studio-surface-muted px-3 py-2 text-center text-sm font-semibold text-studio-text tabular-nums"
           htmlFor="speed-control"
         >
           {playbackRate.toFixed(2)}x

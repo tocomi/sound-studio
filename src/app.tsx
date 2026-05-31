@@ -2,9 +2,18 @@ import { useEffect, useState } from 'react'
 import { EmptyState } from './components/empty-state/empty-state.tsx'
 import { MediaStage } from './components/media-stage/media-stage.tsx'
 import { SpeedControl } from './components/speed-control/speed-control.tsx'
+import { ThemeToggle, type ThemeMode } from './components/theme-toggle/theme-toggle.tsx'
 import { Transport } from './components/transport/transport.tsx'
 import { usePlayer } from './player/use-player.ts'
 import type { LoadedMedia } from './types.ts'
+
+function getInitialThemeMode(): ThemeMode {
+  if (typeof window === 'undefined') {
+    return 'light'
+  }
+
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
 
 /**
  * アプリ全体の読込状態と再生画面を組み立てる。
@@ -15,6 +24,7 @@ function App() {
   const [loadedMedia, setLoadedMedia] = useState<LoadedMedia | null>(null)
   const [mediaElement, setMediaElement] = useState<HTMLMediaElement | null>(null)
   const [playbackRate, setPlaybackRate] = useState(1)
+  const [themeMode, setThemeMode] = useState<ThemeMode>(getInitialThemeMode)
   const player = usePlayer(mediaElement, playbackRate)
 
   useEffect(() => {
@@ -43,26 +53,46 @@ function App() {
     setPlaybackRate(1)
   }
 
+  function toggleThemeMode() {
+    setThemeMode(themeMode === 'light' ? 'dark' : 'light')
+  }
+
   return (
-    <main className="min-h-dvh bg-neutral-950 text-neutral-100">
+    <main
+      className="min-h-dvh overflow-hidden bg-studio-page text-studio-text"
+      data-theme={themeMode}
+    >
       <div className="mx-auto flex min-h-dvh w-full max-w-7xl flex-col gap-6 px-5 py-6 sm:px-8">
-        <header className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-5">
-          <div>
-            <h1 className="mt-1 text-2xl font-semibold text-white">Sound Studio</h1>
+        <header className="flex flex-wrap items-end justify-between gap-4 border-b border-studio-border pb-5">
+          <div className="min-w-0">
+            <p className="text-xs font-semibold tracking-[0.22em] text-studio-text-soft uppercase">
+              pitch-safe practice deck
+            </p>
+            <h1 className="mt-2 text-3xl font-semibold tracking-normal text-studio-text">
+              Sound Studio
+            </h1>
+            {loadedMedia ? (
+              <p className="mt-2 max-w-[min(44rem,100%)] truncate text-sm text-studio-text-muted">
+                {loadedMedia.file.name}
+              </p>
+            ) : null}
           </div>
-          {loadedMedia ? (
-            <button
-              className="touch-manipulation rounded-md border border-white/15 px-3 py-2 text-sm font-medium text-neutral-200 transition hover:border-white/30 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950 focus-visible:outline-none motion-reduce:transition-none"
-              type="button"
-              onClick={resetMedia}
-            >
-              別のファイルを開く
-            </button>
-          ) : null}
+          <div className="flex items-center gap-2">
+            <ThemeToggle themeMode={themeMode} onThemeModeToggle={toggleThemeMode} />
+            {loadedMedia ? (
+              <button
+                className="touch-manipulation rounded-md border border-studio-border bg-studio-surface-raised px-3 py-2 text-sm font-medium text-studio-accent transition hover:border-studio-border-strong hover:bg-studio-surface-muted focus-visible:ring-2 focus-visible:ring-studio-border-strong focus-visible:ring-offset-2 focus-visible:ring-offset-studio-page focus-visible:outline-none motion-reduce:transition-none"
+                type="button"
+                onClick={resetMedia}
+              >
+                別のファイルを開く
+              </button>
+            ) : null}
+          </div>
         </header>
 
         {loadedMedia ? (
-          <section className="grid flex-1 gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
+          <section className="grid flex-1 gap-6 lg:grid-cols-[minmax(0,1fr)_21rem]">
             <div className="flex min-w-0 flex-col gap-4">
               <MediaStage loadedMedia={loadedMedia} onMediaElementChange={setMediaElement} />
               <Transport
@@ -75,16 +105,18 @@ function App() {
               />
               <SpeedControl playbackRate={playbackRate} onPlaybackRateChange={setPlaybackRate} />
             </div>
-            <aside className="rounded-lg border border-white/10 bg-neutral-900/60 p-4">
+            <aside className="flex min-h-72 flex-col rounded-lg border border-studio-border bg-studio-surface p-4">
               <div className="flex items-center justify-between gap-3">
-                <h2 className="text-sm font-semibold text-neutral-100">セクション</h2>
-                <span className="rounded-full bg-neutral-800 px-2 py-1 text-xs text-neutral-400">
-                  v1
+                <h2 className="text-sm font-semibold text-studio-text">セクション</h2>
+                <span className="rounded-full bg-studio-surface-muted px-2 py-1 text-xs text-studio-text-muted">
+                  0
                 </span>
               </div>
-              <div className="mt-5 rounded-md border border-dashed border-white/10 px-4 py-8 text-sm leading-6 text-neutral-400">
-                セクションのマーカー表示と区間ループは、v0 の再生コントロールを確認してから
-                追加します。
+              <div className="mt-5 grid flex-1 place-items-center rounded-md border border-dashed border-studio-border bg-studio-surface-muted px-4 py-8 text-center">
+                <div>
+                  <p className="text-sm font-medium text-studio-text-muted">未登録</p>
+                  <p className="mt-2 text-xs text-studio-text-soft">A / B loop points</p>
+                </div>
               </div>
             </aside>
           </section>
