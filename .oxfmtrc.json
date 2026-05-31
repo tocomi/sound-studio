@@ -7,5 +7,5 @@
     "stylesheet": "./src/index.css",
     "functions": ["clsx", "cn"]
   },
-  "ignorePatterns": [".claude/**", "dist/**", "**/*.json", "**/*.md"]
+  "ignorePatterns": [".claude/**", ".serena/**", "dist/**", "**/*.json", "**/*.md"]
 }
