@@ -1,5 +1,5 @@
-import { cn } from '../../lib/cn.ts'
-import type { ThemeMode } from '../../theme/use-theme.ts'
+import { cn } from '@/lib/cn.ts'
+import type { ThemeMode } from '@/theme/use-theme.ts'
 
 type ThemeToggleProps = {
   themeMode: ThemeMode

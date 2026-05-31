@@ -1,4 +1,4 @@
-import type { LoadedMedia } from '../../types.ts'
+import type { LoadedMedia } from '@/types.ts'
 
 type MediaStageProps = {
   loadedMedia: LoadedMedia

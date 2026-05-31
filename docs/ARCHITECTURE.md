@@ -101,6 +101,10 @@ src/
 **レイヤーで分ける**方針。ビューは必ず `components/` に置き、アプリ状態のスライスを持つ hook は
 関心ごとのトップレベルディレクトリ（`player/` / `theme/` …）に置く。`components/` に hook を混在させない。
 
+import は、同一ディレクトリ内や近いコンポーネント同士では相対 import を使う。`src` 直下のレイヤー
+（`components/` / `player/` / `theme/` / `lib/` / `types.ts` など）をまたぐ場合は `@/` alias を使い、
+ファイルの置き場所に依存する `../../` を増やさない。
+
 v1 で導入予定の以下は、対応する機能を実装するタイミングで追加する（**空ディレクトリを先回りで作らない**）。
 
 - `state/` — Context + `useReducer`、セクション編集状態（`app.tsx` の `useState` 群の移設先）
