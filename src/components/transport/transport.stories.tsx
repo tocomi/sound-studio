@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
 import { fn } from 'storybook/test'
-import { Transport } from './Transport.tsx'
+import { Transport } from './transport.tsx'
 
 const meta = {
   component: Transport,

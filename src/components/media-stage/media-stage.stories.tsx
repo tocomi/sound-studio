@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { fn } from 'storybook/test'
-import { MediaStage } from './MediaStage.tsx'
+import { MediaStage } from './media-stage.tsx'
 
 const meta = {
   component: MediaStage,

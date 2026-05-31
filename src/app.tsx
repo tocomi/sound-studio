@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { EmptyState } from './components/EmptyState/EmptyState.tsx'
-import { MediaStage } from './components/MediaStage/MediaStage.tsx'
-import { SpeedControl } from './components/SpeedControl/SpeedControl.tsx'
-import { Transport } from './components/Transport/Transport.tsx'
-import { usePlayer } from './player/usePlayer.ts'
+import { EmptyState } from './components/empty-state/empty-state.tsx'
+import { MediaStage } from './components/media-stage/media-stage.tsx'
+import { SpeedControl } from './components/speed-control/speed-control.tsx'
+import { Transport } from './components/transport/transport.tsx'
+import { usePlayer } from './player/use-player.ts'
 import type { LoadedMedia } from './types.ts'
 
 /**

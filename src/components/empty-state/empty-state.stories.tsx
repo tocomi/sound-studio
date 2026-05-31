@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { fn } from 'storybook/test'
-import { EmptyState } from './EmptyState.tsx'
+import { EmptyState } from './empty-state.tsx'
 
 const meta = {
   component: EmptyState,
