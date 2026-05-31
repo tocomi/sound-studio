@@ -1,75 +1,67 @@
-# React + TypeScript + Vite
+# Sound Studio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ローカルの動画・音声ファイルを取り込み、**再生速度を落としても音程を保ったまま**、特定の区間を繰り返し再生できる **楽器・音楽練習サポートツール**です。耳コピやフレーズの反復練習を支援します。
 
-Currently, two official plugins are available:
+> ⚠️ まだ初期実装段階です。詳細な仕様は [`docs/`](./docs) を参照してください。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+詳細・対象外機能は [docs/PRODUCT.md](./docs/PRODUCT.md) / [docs/ROADMAP.md](./docs/ROADMAP.md) を参照。
 
-## React Compiler
+## 技術スタック
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+| 領域 | 採用 |
+| --- | --- |
+| UI | React 19（React Compiler 有効） |
+| 言語 | TypeScript（`@typescript/native-preview` / `tsgo`） |
+| ビルド | Vite 8（Rolldown） |
+| Lint / Format | oxlint / oxfmt |
+| Git hooks | lefthook（pre-commit で lint + format チェック） |
+| ランタイム / pkg | Node 24.16.0 / pnpm 10.22.0（mise で管理） |
 
-Note: This will impact Vite dev & build performances.
+音声処理は **ネイティブの `<video>` / `<audio>` 要素のみ**で実装します（外部の音声ライブラリは使いません）。設計の詳細は [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) を参照。
 
-## Expanding the ESLint configuration
+## セットアップ
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+[mise](https://mise.jdx.dev/) で Node / pnpm のバージョンを固定しています。
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+mise install      # Node 24.16.0 / pnpm 10.22.0 を用意
+pnpm install      # 依存をインストール（postinstall で lefthook も導入）
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 開発コマンド
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm dev          # 開発サーバ起動（Vite）
+pnpm build        # 型チェック + 本番ビルド（tsgo -b && vite build）
+pnpm preview      # ビルド成果物をプレビュー
+pnpm typecheck    # 型チェックのみ（tsgo -b）
+pnpm lint         # oxlint
+pnpm lint:fix     # oxlint --fix
+pnpm format       # oxfmt（整形）
+pnpm format:check # oxfmt --check（整形チェック）
 ```
+
+## ディレクトリ構成
+
+```
+sound-studio/
+├─ docs/                 # 仕様ドキュメント
+│  ├─ PRODUCT.md         #   何のアプリか / 対象ユーザー / スコープ
+│  ├─ DESIGN.md          #   画面・操作フロー・UI 方針
+│  ├─ ARCHITECTURE.md    #   状態管理・音声処理・保存形式
+│  └─ ROADMAP.md         #   v0 / v1 / future の機能地図
+├─ src/
+│  ├─ main.tsx           # エントリポイント
+│  └─ App.tsx            # ルートコンポーネント
+├─ public/
+└─ index.html
+```
+
+> 実装が進むにつれて `src/` 配下の構成は [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) の「ディレクトリ方針」に従って拡充していきます。
+
+## ドキュメント
+
+- [docs/PRODUCT.md](./docs/PRODUCT.md) — 何のアプリか、対象ユーザー、v1 スコープ
+- [docs/DESIGN.md](./docs/DESIGN.md) — 画面・操作フロー・UI 方針
+- [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) — 状態管理・音声処理・データ保存
+- [docs/ROADMAP.md](./docs/ROADMAP.md) — 機能の優先順位と未決定事項
