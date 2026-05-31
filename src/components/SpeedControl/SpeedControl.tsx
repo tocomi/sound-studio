@@ -3,6 +3,8 @@ type SpeedControlProps = {
   onPlaybackRateChange: (playbackRate: number) => void
 }
 
+const speedPresets = [0.5, 0.75, 1, 1.25]
+
 /**
  * 再生 speed の調整 UI を表示する。
  * v1 でグローバル speed とセクション別 speed に分かれても、速度調整 UI の責務を
@@ -15,10 +17,31 @@ export function SpeedControl({ playbackRate, onPlaybackRateChange }: SpeedContro
 
   return (
     <section className="rounded-lg border border-white/10 bg-neutral-900/80 p-4">
-      <div className="flex flex-wrap items-center gap-4">
+      <div className="flex flex-wrap items-center gap-3">
         <label className="text-sm font-semibold text-neutral-200" htmlFor="speed-control">
           Speed
         </label>
+        <div className="flex flex-wrap gap-2">
+          {speedPresets.map((speedPreset) => {
+            const isSelected = playbackRate === speedPreset
+
+            return (
+              <button
+                key={speedPreset}
+                className={
+                  isSelected
+                    ? 'h-9 min-w-16 rounded-md bg-cyan-300 px-3 text-sm font-semibold text-neutral-950 transition hover:bg-cyan-200 focus-visible:ring-2 focus-visible:ring-cyan-200 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900 focus-visible:outline-none motion-reduce:transition-none'
+                    : 'h-9 min-w-16 rounded-md border border-white/10 bg-neutral-800 px-3 text-sm font-semibold text-neutral-300 transition hover:border-white/20 hover:bg-neutral-700 focus-visible:ring-2 focus-visible:ring-cyan-200 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900 focus-visible:outline-none motion-reduce:transition-none'
+                }
+                type="button"
+                aria-pressed={isSelected}
+                onClick={() => onPlaybackRateChange(speedPreset)}
+              >
+                {speedPreset.toFixed(speedPreset % 1 === 0 ? 0 : 2)}x
+              </button>
+            )
+          })}
+        </div>
         <input
           className="min-w-56 flex-1 touch-manipulation accent-cyan-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-200"
           id="speed-control"
