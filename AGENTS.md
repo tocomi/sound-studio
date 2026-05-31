@@ -41,4 +41,5 @@ pnpm format:check # oxfmt --check
 - 言語は TypeScript + React 19（React Compiler 有効 → 手動の `useMemo`/`useCallback` メモ化は基本不要）。
 - セクションは常に**配列**として扱う（v1 から複数対応）。データモデルは ARCHITECTURE.md の `Section` / `FileSettings` 型に従う。
 - コンポーネントは関心ごとに分割（`MediaStage` / `Transport` / `SpeedControl` / `SectionList` 等）。
+- Component / hook の主体には必ず JSDoc を付ける。内容は**何をするか**を簡潔に書いたうえで、**なぜその単位が必要か**（責務境界・設計上の理由）も書く。
 - 既存ファイルの記述スタイル（命名・コメント量）に合わせる。
