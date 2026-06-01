@@ -147,11 +147,28 @@ export function WaveformDisplay({
 
     const activeCanvas = canvas
     let animationFrameId = 0
+    let syncedMediaTime = mediaElement?.currentTime ?? currentTime
+    let syncedAt = performance.now()
+
+    function syncMediaClock() {
+      syncedMediaTime = mediaElement?.currentTime ?? currentTime
+      syncedAt = performance.now()
+    }
+
+    function estimatedCurrentTime() {
+      if (!mediaElement || mediaElement.paused || mediaElement.ended) {
+        return mediaElement?.currentTime ?? currentTime
+      }
+
+      const elapsedSeconds = (performance.now() - syncedAt) / 1000
+
+      return syncedMediaTime + elapsedSeconds * mediaElement.playbackRate
+    }
 
     function renderWaveform() {
       const mediaDuration = mediaElement?.duration ?? duration
       const nextDuration = Number.isFinite(mediaDuration) ? mediaDuration : duration
-      const nextCurrentTime = mediaElement?.currentTime ?? currentTime
+      const nextCurrentTime = estimatedCurrentTime()
 
       drawWaveform(activeCanvas, peaks, nextCurrentTime, nextDuration)
     }
@@ -168,9 +185,16 @@ export function WaveformDisplay({
     }
 
     function startAnimation() {
+      syncMediaClock()
+
       if (animationFrameId === 0) {
         animationFrameId = requestAnimationFrame(animateWaveform)
       }
+    }
+
+    function syncAndRenderWaveform() {
+      syncMediaClock()
+      renderWaveform()
     }
 
     renderWaveform()
@@ -181,8 +205,9 @@ export function WaveformDisplay({
 
     resizeObserver.observe(activeCanvas)
     mediaElement?.addEventListener('play', startAnimation)
-    mediaElement?.addEventListener('seeked', renderWaveform)
-    mediaElement?.addEventListener('timeupdate', renderWaveform)
+    mediaElement?.addEventListener('ratechange', syncMediaClock)
+    mediaElement?.addEventListener('seeked', syncAndRenderWaveform)
+    mediaElement?.addEventListener('timeupdate', syncMediaClock)
 
     if (mediaElement && !mediaElement.paused && !mediaElement.ended) {
       startAnimation()
@@ -192,8 +217,9 @@ export function WaveformDisplay({
       cancelAnimationFrame(animationFrameId)
       resizeObserver.disconnect()
       mediaElement?.removeEventListener('play', startAnimation)
-      mediaElement?.removeEventListener('seeked', renderWaveform)
-      mediaElement?.removeEventListener('timeupdate', renderWaveform)
+      mediaElement?.removeEventListener('ratechange', syncMediaClock)
+      mediaElement?.removeEventListener('seeked', syncAndRenderWaveform)
+      mediaElement?.removeEventListener('timeupdate', syncMediaClock)
     }
   }, [currentTime, duration, mediaElement, peaks])
 
