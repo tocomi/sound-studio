@@ -6,6 +6,11 @@ type PitchPreservingMediaElement = HTMLMediaElement & {
   webkitPreservesPitch?: boolean
 }
 
+type LoopRange = {
+  start: number
+  end: number
+}
+
 function setPitchPreservingRate(mediaElement: HTMLMediaElement, playbackRate: number) {
   const pitchPreservingElement = mediaElement as PitchPreservingMediaElement
 
@@ -25,10 +30,13 @@ export function usePlayer(
   playbackRate: number,
   volume: number,
   isMuted: boolean,
+  loopRange: LoopRange | null = null,
 ) {
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
+  const loopStart = loopRange?.start ?? null
+  const loopEnd = loopRange?.end ?? null
 
   useEffect(() => {
     if (!mediaElement) {
@@ -86,6 +94,32 @@ export function usePlayer(
     mediaElement.volume = Math.min(Math.max(volume, 0), 1)
     mediaElement.muted = isMuted
   }, [isMuted, mediaElement, volume])
+
+  useEffect(() => {
+    if (!mediaElement || loopStart === null || loopEnd === null || loopStart >= loopEnd) {
+      return
+    }
+
+    let animationFrameId = 0
+    const loopMediaElement = mediaElement
+    const activeLoopStart = loopStart
+    const activeLoopEnd = loopEnd
+
+    function monitorLoopRange() {
+      if (loopMediaElement.currentTime >= activeLoopEnd) {
+        loopMediaElement.currentTime = activeLoopStart
+        setCurrentTime(activeLoopStart)
+      }
+
+      animationFrameId = requestAnimationFrame(monitorLoopRange)
+    }
+
+    animationFrameId = requestAnimationFrame(monitorLoopRange)
+
+    return () => {
+      cancelAnimationFrame(animationFrameId)
+    }
+  }, [loopEnd, loopStart, mediaElement])
 
   async function play() {
     if (!mediaElement) {

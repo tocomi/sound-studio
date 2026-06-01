@@ -10,8 +10,9 @@ import { VolumeControl } from '@/components/volume-control/volume-control.tsx'
 import { useKeyboardShortcuts } from '@/player/use-keyboard-shortcuts.ts'
 import { usePlayer } from '@/player/use-player.ts'
 import { useVolumePreference } from '@/player/use-volume-preference.ts'
+import { useFileSettingsActions, useFileSettingsState } from '@/state/file-settings-provider.tsx'
+import { selectedSection } from '@/state/file-settings-reducer.ts'
 import { useTheme } from '@/theme/use-theme.ts'
-import type { LoadedMedia } from '@/types.ts'
 
 /**
  * アプリ全体の読込状態と再生画面を組み立てる。
@@ -19,10 +20,13 @@ import type { LoadedMedia } from '@/types.ts'
  * セクション状態を追加するときも画面全体の流れを一箇所で追えるようにする。
  */
 function App() {
-  const [loadedMedia, setLoadedMedia] = useState<LoadedMedia | null>(null)
   const [mediaElement, setMediaElement] = useState<HTMLMediaElement | null>(null)
-  const [playbackRate, setPlaybackRate] = useState(1)
   const [seekStepSeconds, setSeekStepSeconds] = useState(5)
+  const fileSettingsState = useFileSettingsState()
+  const fileSettingsActions = useFileSettingsActions()
+  const { fileSettings, loadedMedia } = fileSettingsState
+  const activeSection = selectedSection(fileSettingsState)
+  const playbackRate = activeSection?.speed ?? fileSettings?.globalSpeed ?? 1
   const { themeMode, toggleThemeMode } = useTheme()
   const volumePreference = useVolumePreference()
   const player = usePlayer(
@@ -30,6 +34,7 @@ function App() {
     playbackRate,
     volumePreference.volume,
     volumePreference.isMuted,
+    activeSection ? { start: activeSection.start, end: activeSection.end } : null,
   )
 
   useKeyboardShortcuts({
@@ -51,21 +56,26 @@ function App() {
   }, [loadedMedia])
 
   function loadFile(file: File) {
-    const kind = file.type.startsWith('video/') ? 'video' : 'audio'
-
     setMediaElement(null)
-    setLoadedMedia({
-      file,
-      kind,
-      url: URL.createObjectURL(file),
-    })
-    setPlaybackRate(1)
+    fileSettingsActions.loadFile(file)
   }
 
   function resetMedia() {
     setMediaElement(null)
-    setLoadedMedia(null)
-    setPlaybackRate(1)
+    fileSettingsActions.clearFile()
+  }
+
+  function changePlaybackRate(nextPlaybackRate: number) {
+    if (activeSection) {
+      fileSettingsActions.updateSection(
+        activeSection.id,
+        { speed: nextPlaybackRate },
+        player.duration,
+      )
+      return
+    }
+
+    fileSettingsActions.setGlobalSpeed(nextPlaybackRate)
   }
 
   return (
@@ -94,7 +104,7 @@ function App() {
                 onSeekForward={() => player.seekBy(seekStepSeconds)}
                 onSeekStepSecondsChange={setSeekStepSeconds}
               />
-              <SpeedControl playbackRate={playbackRate} onPlaybackRateChange={setPlaybackRate} />
+              <SpeedControl playbackRate={playbackRate} onPlaybackRateChange={changePlaybackRate} />
               <VolumeControl
                 isMuted={volumePreference.isMuted}
                 volume={volumePreference.volume}
@@ -102,7 +112,14 @@ function App() {
                 onVolumeChange={volumePreference.changeVolume}
               />
             </div>
-            <SectionList />
+            <SectionList
+              currentTime={player.currentTime}
+              duration={player.duration}
+              onSectionActivated={(start) => {
+                player.seek(start)
+                void player.play()
+              }}
+            />
           </section>
         ) : (
           <EmptyState onFileSelected={loadFile} />
