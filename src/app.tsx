@@ -102,7 +102,13 @@ function App() {
         {loadedMedia ? (
           <section className="grid flex-1 gap-6 lg:grid-cols-[minmax(0,1fr)_21rem]">
             <div className="flex min-w-0 flex-col gap-3">
-              <MediaStage loadedMedia={loadedMedia} onMediaElementChange={setMediaElement} />
+              <MediaStage
+                currentTime={player.currentTime}
+                duration={player.duration}
+                loadedMedia={loadedMedia}
+                mediaElement={mediaElement}
+                onMediaElementChange={setMediaElement}
+              />
               <Transport
                 currentTime={player.currentTime}
                 duration={player.duration}

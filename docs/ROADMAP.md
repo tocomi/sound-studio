@@ -32,7 +32,7 @@
 
 優先度の目安は上から高い順。
 
-- [ ] **波形表示**（Web Audio `decodeAudioData` → ピーク間引き → canvas）
+- [x] **波形表示**（Web Audio `decodeAudioData` → ピーク間引き → canvas）
 - [ ] **波形上のドラッグで区間作成 / 編集**（波形が前提）
 - [ ] **キー変更（移調 / pitch shift）**（SoundTouch.js 等を Web Audio に組む）
 - [ ] **ループ回数指定**（n 回で停止）

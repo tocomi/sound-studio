@@ -7,6 +7,9 @@ import { MediaStage } from './media-stage.tsx'
 const meta = {
   component: MediaStage,
   args: {
+    currentTime: 18,
+    duration: 96,
+    mediaElement: null,
     onMediaElementChange: fn(),
   },
 } satisfies Meta<typeof MediaStage>
