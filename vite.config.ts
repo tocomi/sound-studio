@@ -8,6 +8,8 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 
+import { cloudflare } from "@cloudflare/vite-plugin";
+
 const dirname =
   typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url))
 
@@ -18,13 +20,9 @@ export default defineConfig({
       '@': path.resolve(dirname, 'src'),
     },
   },
-  plugins: [
-    react(),
-    babel({
-      presets: [reactCompilerPreset()],
-    }),
-    tailwindcss(),
-  ],
+  plugins: [react(), babel({
+    presets: [reactCompilerPreset()],
+  }), tailwindcss(), cloudflare()],
   test: {
     projects: [
       {
