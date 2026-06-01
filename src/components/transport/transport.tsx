@@ -1,10 +1,19 @@
 import { Repeat2 } from 'lucide-react'
 
+type SectionMarker = {
+  end: number
+  id: string
+  isActive: boolean
+  name: string
+  start: number
+}
+
 type TransportProps = {
   currentTime: number
   duration: number
   isLoopEnabled: boolean
   isPlaying: boolean
+  sectionMarkers: SectionMarker[]
   seekStepSeconds: number
   onLoopToggle: (enabled?: boolean) => void
   onPause: () => void
@@ -27,6 +36,28 @@ function formatTime(time: number) {
   return `${minutes}:${seconds.toString().padStart(2, '0')}`
 }
 
+function clampPercent(value: number) {
+  return Math.min(Math.max(value, 0), 100)
+}
+
+function markerPosition(marker: SectionMarker, duration: number) {
+  if (!Number.isFinite(duration) || duration <= 0) {
+    return null
+  }
+
+  const startPercent = clampPercent((marker.start / duration) * 100)
+  const endPercent = clampPercent((marker.end / duration) * 100)
+
+  if (endPercent <= startPercent) {
+    return null
+  }
+
+  return {
+    left: `${startPercent}%`,
+    width: `${endPercent - startPercent}%`,
+  }
+}
+
 /**
  * 再生、停止、シーク、時刻表示をまとめて表示する。
  * 練習中に最も頻繁に触る再生操作を一つの面にまとめ、v1 の区間マーカー追加時も
@@ -37,6 +68,7 @@ export function Transport({
   duration,
   isLoopEnabled,
   isPlaying,
+  sectionMarkers,
   seekStepSeconds,
   onLoopToggle,
   onPause,
@@ -77,8 +109,30 @@ export function Transport({
           {formatTime(currentTime)} / {formatTime(duration)}
         </div>
         <div className="relative min-w-40 flex-1">
+          <div className="pointer-events-none absolute inset-x-2 top-[calc(50%+0.38rem)] h-1.5 overflow-hidden">
+            {sectionMarkers.map((marker) => {
+              const position = markerPosition(marker, duration)
+
+              if (!position) {
+                return null
+              }
+
+              return (
+                <span
+                  key={marker.id}
+                  className={
+                    marker.isActive
+                      ? 'absolute top-1/2 h-px -translate-y-1/2 rounded-full bg-studio-accent opacity-80 before:absolute before:top-1/2 before:left-0 before:h-1.5 before:w-px before:-translate-y-1/2 before:rounded-full before:bg-studio-accent after:absolute after:top-1/2 after:right-0 after:h-1.5 after:w-px after:-translate-y-1/2 after:rounded-full after:bg-studio-accent'
+                      : 'absolute top-1/2 h-px -translate-y-1/2 rounded-full bg-studio-text-soft opacity-35 before:absolute before:top-1/2 before:left-0 before:h-1.5 before:w-px before:-translate-y-1/2 before:rounded-full before:bg-studio-text-soft after:absolute after:top-1/2 after:right-0 after:h-1.5 after:w-px after:-translate-y-1/2 after:rounded-full after:bg-studio-text-soft'
+                  }
+                  style={position}
+                  title={marker.name}
+                />
+              )
+            })}
+          </div>
           <input
-            className="range-control w-full touch-manipulation focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-studio-border-strong"
+            className="range-control relative z-20 w-full touch-manipulation focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-studio-border-strong"
             type="range"
             data-shortcut-arrows="seek"
             aria-label="再生位置"

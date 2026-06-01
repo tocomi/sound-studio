@@ -12,6 +12,22 @@ const meta = {
     duration: 213,
     isLoopEnabled: true,
     isPlaying: false,
+    sectionMarkers: [
+      {
+        end: 38,
+        id: 'intro',
+        isActive: false,
+        name: 'Intro',
+        start: 12,
+      },
+      {
+        end: 126,
+        id: 'solo',
+        isActive: true,
+        name: 'Solo',
+        start: 92,
+      },
+    ],
     seekStepSeconds: 2,
     onLoopToggle: fn(),
     onPause: fn(),
@@ -38,6 +54,7 @@ const meta = {
         duration={args.duration}
         isLoopEnabled={isLoopEnabled}
         isPlaying={isPlaying}
+        sectionMarkers={args.sectionMarkers}
         seekStepSeconds={seekStepSeconds}
         onLoopToggle={() => setIsLoopEnabled((enabled) => !enabled)}
         onPause={() => setIsPlaying(false)}

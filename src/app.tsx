@@ -28,6 +28,14 @@ function App() {
   const activeSection = selectedSection(fileSettingsState)
   const playbackRate = activeSection?.speed ?? fileSettings?.globalSpeed ?? 1
   const seekStepSeconds = fileSettings?.seekStepSeconds ?? DEFAULT_SEEK_STEP_SECONDS
+  const sectionMarkers =
+    fileSettings?.sections.map((section) => ({
+      end: section.end,
+      id: section.id,
+      isActive: section.id === activeSection?.id,
+      name: section.name,
+      start: section.start,
+    })) ?? []
   const loopRange =
     activeSection && isLoopEnabled ? { start: activeSection.start, end: activeSection.end } : null
   const { themeMode, toggleThemeMode } = useTheme()
@@ -100,6 +108,7 @@ function App() {
                 duration={player.duration}
                 isLoopEnabled={isLoopEnabled}
                 isPlaying={player.isPlaying}
+                sectionMarkers={sectionMarkers}
                 seekStepSeconds={seekStepSeconds}
                 onLoopToggle={fileSettingsActions.toggleLoop}
                 onPause={player.pause}
