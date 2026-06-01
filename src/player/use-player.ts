@@ -11,6 +11,7 @@ type LoopRange = {
   end: number
 }
 
+/** playbackRate をセットしつつ、ブラウザ間の差異を吸収しながら音程保持を有効にする。 */
 function setPitchPreservingRate(mediaElement: HTMLMediaElement, playbackRate: number) {
   const pitchPreservingElement = mediaElement as PitchPreservingMediaElement
 
@@ -38,6 +39,10 @@ export function usePlayer(
   const loopStart = loopRange?.start ?? null
   const loopEnd = loopRange?.end ?? null
 
+  /**
+   * メディア要素のイベントを購読して React state と同期する。
+   * mediaElement が差し替わるたびに旧リスナーを解除して新要素に張り直す。
+   */
   useEffect(() => {
     if (!mediaElement) {
       setCurrentTime(0)
@@ -80,12 +85,20 @@ export function usePlayer(
     }
   }, [mediaElement])
 
+  /**
+   * playbackRate が変わるたびにメディア要素へ即時反映する。
+   * preservesPitch 設定は変速しても音程を保つために毎回セットする。
+   */
   useEffect(() => {
     if (mediaElement) {
       setPitchPreservingRate(mediaElement, playbackRate)
     }
   }, [mediaElement, playbackRate])
 
+  /**
+   * 音量・ミュートをメディア要素へ反映する。
+   * volume / isMuted は localStorage 由来なので初回マウント時にも正しい値をセットするために useEffect で同期する。
+   */
   useEffect(() => {
     if (!mediaElement) {
       return
@@ -95,6 +108,10 @@ export function usePlayer(
     mediaElement.muted = isMuted
   }, [isMuted, mediaElement, volume])
 
+  /**
+   * loopRange が有効な間、rAF で currentTime を監視してループ折り返しを行う。
+   * timeupdate はブラウザの発火頻度が低く折り返しが遅れるため rAF で高頻度チェックしている。
+   */
   useEffect(() => {
     if (!mediaElement || loopStart === null || loopEnd === null || loopStart >= loopEnd) {
       return
@@ -121,6 +138,7 @@ export function usePlayer(
     }
   }, [loopEnd, loopStart, mediaElement])
 
+  /** 再生を開始する。ブラウザの自動再生ポリシーで拒否された場合は isPlaying を false に戻す。 */
   async function play() {
     if (!mediaElement) {
       return
@@ -133,10 +151,12 @@ export function usePlayer(
     }
   }
 
+  /** 再生を一時停止する。 */
   function pause() {
     mediaElement?.pause()
   }
 
+  /** 指定した絶対時間（秒）にシークする。0 〜 duration の範囲にクランプする。 */
   function seek(nextTime: number) {
     if (!mediaElement) {
       return
@@ -147,6 +167,7 @@ export function usePlayer(
     setCurrentTime(clampedTime)
   }
 
+  /** 現在位置から相対秒数だけシークする。負値で巻き戻し、正値で早送り。 */
   function seekBy(deltaTime: number) {
     if (!mediaElement) {
       return
