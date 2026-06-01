@@ -53,17 +53,17 @@ export function Transport({
   }
 
   return (
-    <section className="rounded-lg border border-studio-border bg-studio-surface p-4">
-      <div className="flex flex-wrap items-center gap-3">
+    <section className="rounded-lg border border-studio-border bg-studio-surface px-4 py-3">
+      <div className="flex flex-wrap items-center gap-2.5">
         <button
-          className="grid size-12 touch-manipulation place-items-center rounded-full bg-studio-accent text-sm font-bold text-studio-accent-contrast transition hover:bg-studio-accent-hover focus-visible:ring-2 focus-visible:ring-studio-border-strong focus-visible:ring-offset-2 focus-visible:ring-offset-studio-surface focus-visible:outline-none motion-reduce:transition-none"
+          className="grid size-10 touch-manipulation place-items-center rounded-full bg-studio-accent text-sm font-bold text-studio-accent-contrast transition hover:bg-studio-accent-hover focus-visible:ring-2 focus-visible:ring-studio-border-strong focus-visible:ring-offset-2 focus-visible:ring-offset-studio-surface focus-visible:outline-none motion-reduce:transition-none"
           type="button"
           aria-label={isPlaying ? '停止' : '再生'}
           aria-pressed={isPlaying}
           title={isPlaying ? '停止' : '再生'}
           onClick={isPlaying ? onPause : onPlay}
         >
-          <span aria-hidden="true" className="text-lg leading-none">
+          <span aria-hidden="true" className="text-base leading-none">
             {isPlaying ? 'II' : '▶'}
           </span>
         </button>
@@ -82,9 +82,9 @@ export function Transport({
             onChange={handleSeek}
           />
         </div>
-        <div className="flex h-10 items-center overflow-hidden rounded-md border border-studio-border bg-studio-surface-raised">
+        <div className="flex h-9 items-center overflow-hidden rounded-md border border-studio-border bg-studio-surface-raised">
           <button
-            className="grid h-10 w-11 touch-manipulation place-items-center border-r border-studio-border text-sm font-bold text-studio-text-muted transition hover:bg-studio-surface-muted focus-visible:ring-2 focus-visible:ring-studio-border-strong focus-visible:outline-none focus-visible:ring-inset motion-reduce:transition-none"
+            className="grid h-9 w-10 touch-manipulation place-items-center border-r border-studio-border text-sm font-bold text-studio-text-muted transition hover:bg-studio-surface-muted focus-visible:ring-2 focus-visible:ring-studio-border-strong focus-visible:outline-none focus-visible:ring-inset motion-reduce:transition-none"
             type="button"
             aria-label={`${seekStepSeconds}秒戻る`}
             title={`← ${seekStepSeconds}秒戻る`}
@@ -94,7 +94,7 @@ export function Transport({
               ←
             </span>
           </button>
-          <label className="flex h-10 items-center gap-1.5 px-2 text-sm font-medium text-studio-text-muted">
+          <label className="flex h-9 items-center gap-1.5 px-2 text-sm font-medium text-studio-text-muted">
             <input
               className="w-9 bg-transparent text-center font-semibold text-studio-text tabular-nums focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-studio-border-strong"
               type="number"
@@ -111,7 +111,7 @@ export function Transport({
             <span>sec</span>
           </label>
           <button
-            className="grid h-10 w-11 touch-manipulation place-items-center border-l border-studio-border text-sm font-bold text-studio-text-muted transition hover:bg-studio-surface-muted focus-visible:ring-2 focus-visible:ring-studio-border-strong focus-visible:outline-none focus-visible:ring-inset motion-reduce:transition-none"
+            className="grid h-9 w-10 touch-manipulation place-items-center border-l border-studio-border text-sm font-bold text-studio-text-muted transition hover:bg-studio-surface-muted focus-visible:ring-2 focus-visible:ring-studio-border-strong focus-visible:outline-none focus-visible:ring-inset motion-reduce:transition-none"
             type="button"
             aria-label={`${seekStepSeconds}秒進む`}
             title={`→ ${seekStepSeconds}秒進む`}

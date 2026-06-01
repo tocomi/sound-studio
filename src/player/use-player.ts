@@ -20,7 +20,12 @@ function setPitchPreservingRate(mediaElement: HTMLMediaElement, playbackRate: nu
  * メディア要素への命令的な操作を React UI から切り離し、リアルタイム再生状態が
  * 保存用 state やコンポーネント構造へ広がらないようにするために分けている。
  */
-export function usePlayer(mediaElement: HTMLMediaElement | null, playbackRate: number) {
+export function usePlayer(
+  mediaElement: HTMLMediaElement | null,
+  playbackRate: number,
+  volume: number,
+  isMuted: boolean,
+) {
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -72,6 +77,15 @@ export function usePlayer(mediaElement: HTMLMediaElement | null, playbackRate: n
       setPitchPreservingRate(mediaElement, playbackRate)
     }
   }, [mediaElement, playbackRate])
+
+  useEffect(() => {
+    if (!mediaElement) {
+      return
+    }
+
+    mediaElement.volume = Math.min(Math.max(volume, 0), 1)
+    mediaElement.muted = isMuted
+  }, [isMuted, mediaElement, volume])
 
   async function play() {
     if (!mediaElement) {

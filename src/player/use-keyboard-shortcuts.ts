@@ -7,6 +7,7 @@ type UseKeyboardShortcutsParams = {
   onPause: () => void
   onPlay: () => void
   onSeekBy: (deltaTime: number) => void
+  onVolumeChangeBy: (deltaVolume: number) => void
 }
 
 function isFormTarget(target: EventTarget | null) {
@@ -43,6 +44,7 @@ export function useKeyboardShortcuts({
   onPause,
   onPlay,
   onSeekBy,
+  onVolumeChangeBy,
 }: UseKeyboardShortcutsParams) {
   useEffect(() => {
     if (!isEnabled) {
@@ -77,6 +79,18 @@ export function useKeyboardShortcuts({
       if (event.key === 'ArrowRight') {
         event.preventDefault()
         onSeekBy(seekStepSeconds)
+        return
+      }
+
+      if (event.key === 'ArrowUp') {
+        event.preventDefault()
+        onVolumeChangeBy(0.05)
+        return
+      }
+
+      if (event.key === 'ArrowDown') {
+        event.preventDefault()
+        onVolumeChangeBy(-0.05)
       }
     }
 
@@ -85,5 +99,5 @@ export function useKeyboardShortcuts({
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [isEnabled, isPlaying, onPause, onPlay, onSeekBy, seekStepSeconds])
+  }, [isEnabled, isPlaying, onPause, onPlay, onSeekBy, onVolumeChangeBy, seekStepSeconds])
 }

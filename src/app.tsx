@@ -6,8 +6,10 @@ import { MediaStage } from '@/components/media-stage/media-stage.tsx'
 import { SectionList } from '@/components/section-list/section-list.tsx'
 import { SpeedControl } from '@/components/speed-control/speed-control.tsx'
 import { Transport } from '@/components/transport/transport.tsx'
+import { VolumeControl } from '@/components/volume-control/volume-control.tsx'
 import { useKeyboardShortcuts } from '@/player/use-keyboard-shortcuts.ts'
 import { usePlayer } from '@/player/use-player.ts'
+import { useVolumePreference } from '@/player/use-volume-preference.ts'
 import { useTheme } from '@/theme/use-theme.ts'
 import type { LoadedMedia } from '@/types.ts'
 
@@ -22,7 +24,13 @@ function App() {
   const [playbackRate, setPlaybackRate] = useState(1)
   const [seekStepSeconds, setSeekStepSeconds] = useState(5)
   const { themeMode, toggleThemeMode } = useTheme()
-  const player = usePlayer(mediaElement, playbackRate)
+  const volumePreference = useVolumePreference()
+  const player = usePlayer(
+    mediaElement,
+    playbackRate,
+    volumePreference.volume,
+    volumePreference.isMuted,
+  )
 
   useKeyboardShortcuts({
     isEnabled: Boolean(mediaElement),
@@ -31,6 +39,7 @@ function App() {
     onPause: player.pause,
     onPlay: player.play,
     onSeekBy: player.seekBy,
+    onVolumeChangeBy: volumePreference.changeVolumeBy,
   })
 
   useEffect(() => {
@@ -71,7 +80,7 @@ function App() {
 
         {loadedMedia ? (
           <section className="grid flex-1 gap-6 lg:grid-cols-[minmax(0,1fr)_21rem]">
-            <div className="flex min-w-0 flex-col gap-4">
+            <div className="flex min-w-0 flex-col gap-3">
               <MediaStage loadedMedia={loadedMedia} onMediaElementChange={setMediaElement} />
               <Transport
                 currentTime={player.currentTime}
@@ -86,6 +95,12 @@ function App() {
                 onSeekStepSecondsChange={setSeekStepSeconds}
               />
               <SpeedControl playbackRate={playbackRate} onPlaybackRateChange={setPlaybackRate} />
+              <VolumeControl
+                isMuted={volumePreference.isMuted}
+                volume={volumePreference.volume}
+                onMutedToggle={volumePreference.toggleMuted}
+                onVolumeChange={volumePreference.changeVolume}
+              />
             </div>
             <SectionList />
           </section>
