@@ -74,6 +74,7 @@ export function Transport({
           <input
             className="range-control w-full touch-manipulation focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-studio-border-strong"
             type="range"
+            data-shortcut-arrows="seek"
             aria-label="再生位置"
             min="0"
             max={duration || 0}

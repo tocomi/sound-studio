@@ -24,10 +24,18 @@ function isFormTarget(target: EventTarget | null) {
   )
 }
 
+function isSeekShortcutTarget(target: EventTarget | null) {
+  if (!(target instanceof HTMLElement)) {
+    return false
+  }
+
+  return target.closest('[data-shortcut-arrows="seek"]') !== null
+}
+
 /**
  * 練習中のグローバルキーボード操作を扱う。
- * Space は練習中の再生/停止として強く予約し、それ以外の操作は入力欄や将来の
- * セクション編集と衝突しないように専用 hook として分けている。
+ * Space と再生バー上の左右キーは練習操作として強く予約し、それ以外の操作は
+ * 入力欄や将来のセクション編集と衝突しないように専用 hook として分けている。
  */
 export function useKeyboardShortcuts({
   isEnabled,
@@ -62,19 +70,27 @@ export function useKeyboardShortcuts({
         return
       }
 
-      if (isFormTarget(event.target)) {
-        return
-      }
-
       if (event.key === 'ArrowLeft') {
+        if (isFormTarget(event.target) && !isSeekShortcutTarget(event.target)) {
+          return
+        }
+
         event.preventDefault()
         onSeekBy(-seekStepSeconds)
         return
       }
 
       if (event.key === 'ArrowRight') {
+        if (isFormTarget(event.target) && !isSeekShortcutTarget(event.target)) {
+          return
+        }
+
         event.preventDefault()
         onSeekBy(seekStepSeconds)
+        return
+      }
+
+      if (isFormTarget(event.target)) {
         return
       }
 

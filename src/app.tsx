@@ -104,13 +104,18 @@ function App() {
                 onSeekForward={() => player.seekBy(seekStepSeconds)}
                 onSeekStepSecondsChange={setSeekStepSeconds}
               />
-              <SpeedControl playbackRate={playbackRate} onPlaybackRateChange={changePlaybackRate} />
-              <VolumeControl
-                isMuted={volumePreference.isMuted}
-                volume={volumePreference.volume}
-                onMutedToggle={volumePreference.toggleMuted}
-                onVolumeChange={volumePreference.changeVolume}
-              />
+              <div className="grid gap-3 lg:grid-cols-[max-content_minmax(18rem,1fr)]">
+                <SpeedControl
+                  playbackRate={playbackRate}
+                  onPlaybackRateChange={changePlaybackRate}
+                />
+                <VolumeControl
+                  isMuted={volumePreference.isMuted}
+                  volume={volumePreference.volume}
+                  onMutedToggle={volumePreference.toggleMuted}
+                  onVolumeChange={volumePreference.changeVolume}
+                />
+              </div>
             </div>
             <SectionList
               currentTime={player.currentTime}
