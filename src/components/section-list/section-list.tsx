@@ -127,7 +127,7 @@ export function SectionList({ currentTime, duration, onSectionActivated }: Secti
     section: (typeof sections)[number],
     isSelected: boolean,
   ) {
-    if (event.key !== 'Enter' && event.key !== ' ') {
+    if (event.key !== 'Enter') {
       return
     }
 

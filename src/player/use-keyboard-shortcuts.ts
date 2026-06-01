@@ -24,18 +24,10 @@ function isFormTarget(target: EventTarget | null) {
   )
 }
 
-function isActivationTarget(target: EventTarget | null) {
-  if (!(target instanceof HTMLElement)) {
-    return false
-  }
-
-  return target.closest('a,button,[role="button"],summary') !== null
-}
-
 /**
  * 練習中のグローバルキーボード操作を扱う。
- * 再生 UI の各ボタンから独立した入口を一箇所にまとめ、入力欄や将来のセクション編集と
- * ショートカットの衝突を避けるために専用 hook として分けている。
+ * Space は練習中の再生/停止として強く予約し、それ以外の操作は入力欄や将来の
+ * セクション編集と衝突しないように専用 hook として分けている。
  */
 export function useKeyboardShortcuts({
   isEnabled,
@@ -52,21 +44,25 @@ export function useKeyboardShortcuts({
     }
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.defaultPrevented || event.repeat || isFormTarget(event.target)) {
+      if (event.repeat) {
         return
       }
 
       if (event.code === 'Space') {
-        if (isActivationTarget(event.target)) {
-          return
-        }
-
         event.preventDefault()
         if (isPlaying) {
           onPause()
         } else {
           onPlay()
         }
+        return
+      }
+
+      if (event.defaultPrevented) {
+        return
+      }
+
+      if (isFormTarget(event.target)) {
         return
       }
 
