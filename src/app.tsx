@@ -24,10 +24,12 @@ function App() {
   const [mediaElement, setMediaElement] = useState<HTMLMediaElement | null>(null)
   const fileSettingsState = useFileSettingsState()
   const fileSettingsActions = useFileSettingsActions()
-  const { fileSettings, loadedMedia } = fileSettingsState
+  const { fileSettings, isLoopEnabled, loadedMedia } = fileSettingsState
   const activeSection = selectedSection(fileSettingsState)
   const playbackRate = activeSection?.speed ?? fileSettings?.globalSpeed ?? 1
   const seekStepSeconds = fileSettings?.seekStepSeconds ?? DEFAULT_SEEK_STEP_SECONDS
+  const loopRange =
+    activeSection && isLoopEnabled ? { start: activeSection.start, end: activeSection.end } : null
   const { themeMode, toggleThemeMode } = useTheme()
   const volumePreference = useVolumePreference()
   const player = usePlayer(
@@ -35,7 +37,7 @@ function App() {
     playbackRate,
     volumePreference.volume,
     volumePreference.isMuted,
-    activeSection ? { start: activeSection.start, end: activeSection.end } : null,
+    loopRange,
   )
 
   useKeyboardShortcuts({
@@ -96,8 +98,10 @@ function App() {
               <Transport
                 currentTime={player.currentTime}
                 duration={player.duration}
+                isLoopEnabled={isLoopEnabled}
                 isPlaying={player.isPlaying}
                 seekStepSeconds={seekStepSeconds}
+                onLoopToggle={fileSettingsActions.toggleLoop}
                 onPause={player.pause}
                 onPlay={player.play}
                 onSeek={player.seek}
@@ -121,6 +125,7 @@ function App() {
             <SectionList
               currentTime={player.currentTime}
               duration={player.duration}
+              isLoopEnabled={isLoopEnabled}
               onSectionActivated={(start) => {
                 player.seek(start)
                 void player.play()

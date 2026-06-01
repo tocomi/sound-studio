@@ -1,5 +1,6 @@
 import {
   DEFAULT_GLOBAL_SPEED,
+  DEFAULT_LOOP_ENABLED,
   DEFAULT_SEEK_STEP_SECONDS,
   MAX_SEEK_STEP_SECONDS,
   MIN_SEEK_STEP_SECONDS,
@@ -60,7 +61,7 @@ export const initialFileSettingsState: FileSettingsState = {
   loadedMedia: null,
   fileSettings: null,
   selectedSectionId: null,
-  isLoopEnabled: false,
+  isLoopEnabled: DEFAULT_LOOP_ENABLED,
 }
 
 function isFinitePositive(value: number | undefined): value is number {
@@ -115,6 +116,7 @@ function createInitialSettings(media: LoadedMedia): FileSettings {
   return {
     fileLabel: media.file.name,
     globalSpeed: DEFAULT_GLOBAL_SPEED,
+    loopEnabled: DEFAULT_LOOP_ENABLED,
     seekStepSeconds: DEFAULT_SEEK_STEP_SECONDS,
     sections: [],
   }
@@ -124,6 +126,7 @@ function normalizeSettings(settings: FileSettings, duration?: number): FileSetti
   return {
     fileLabel: settings.fileLabel,
     globalSpeed: normalizeSpeed(settings.globalSpeed),
+    loopEnabled: settings.loopEnabled,
     seekStepSeconds: normalizeSeekStepSeconds(settings.seekStepSeconds),
     sections: settings.sections.map((section) => normalizeSection(section, duration)),
   }
@@ -145,7 +148,7 @@ export function fileSettingsReducer(
           ? normalizeSettings(action.settings)
           : createInitialSettings(action.media),
         selectedSectionId: null,
-        isLoopEnabled: false,
+        isLoopEnabled: action.settings?.loopEnabled ?? DEFAULT_LOOP_ENABLED,
       }
     }
 
@@ -217,9 +220,17 @@ export function fileSettingsReducer(
     }
 
     case 'toggleLoop': {
+      const nextLoopEnabled = action.enabled ?? !state.isLoopEnabled
+
       return {
         ...state,
-        isLoopEnabled: action.enabled ?? !state.isLoopEnabled,
+        fileSettings: state.fileSettings
+          ? {
+              ...state.fileSettings,
+              loopEnabled: nextLoopEnabled,
+            }
+          : state.fileSettings,
+        isLoopEnabled: nextLoopEnabled,
       }
     }
 

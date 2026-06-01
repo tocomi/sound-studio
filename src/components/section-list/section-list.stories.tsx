@@ -22,6 +22,7 @@ export const Empty: Story = {
   args: {
     currentTime: 0,
     duration: 0,
+    isLoopEnabled: true,
     onSectionActivated: () => {},
   },
 }

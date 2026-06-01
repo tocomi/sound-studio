@@ -35,6 +35,7 @@ const file = { name: 'practice.mp4', size: 12345, lastModified: 67890 }
 const settings: FileSettings = {
   fileLabel: 'practice.mp4',
   globalSpeed: 0.8,
+  loopEnabled: false,
   seekStepSeconds: 10,
   sections: [
     {
@@ -83,6 +84,7 @@ describe('file settings storage', () => {
     expect(loadFileSettings(storage, file)).toEqual({
       fileLabel: 'practice.mp4',
       globalSpeed: 0.8,
+      loopEnabled: true,
       seekStepSeconds: 2,
       sections: [],
     })

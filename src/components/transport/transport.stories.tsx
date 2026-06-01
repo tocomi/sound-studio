@@ -10,8 +10,10 @@ const meta = {
   args: {
     currentTime: 42,
     duration: 213,
+    isLoopEnabled: true,
     isPlaying: false,
     seekStepSeconds: 2,
+    onLoopToggle: fn(),
     onPause: fn(),
     onPlay: fn(),
     onSeek: fn(),
@@ -22,6 +24,7 @@ const meta = {
   // 再生位置と再生状態を story 側で保持し、再生／シーク操作が反映される状態を見せる。
   render: function Render(args) {
     const [currentTime, setCurrentTime] = useState(args.currentTime)
+    const [isLoopEnabled, setIsLoopEnabled] = useState(args.isLoopEnabled)
     const [isPlaying, setIsPlaying] = useState(args.isPlaying)
     const [seekStepSeconds, setSeekStepSeconds] = useState(args.seekStepSeconds)
 
@@ -33,8 +36,10 @@ const meta = {
       <Transport
         currentTime={currentTime}
         duration={args.duration}
+        isLoopEnabled={isLoopEnabled}
         isPlaying={isPlaying}
         seekStepSeconds={seekStepSeconds}
+        onLoopToggle={() => setIsLoopEnabled((enabled) => !enabled)}
         onPause={() => setIsPlaying(false)}
         onPlay={() => setIsPlaying(true)}
         onSeek={setCurrentTime}

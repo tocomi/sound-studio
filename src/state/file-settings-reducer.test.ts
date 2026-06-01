@@ -29,6 +29,7 @@ const section: Section = {
 const settings: FileSettings = {
   fileLabel: 'practice.mp4',
   globalSpeed: 0.9,
+  loopEnabled: true,
   seekStepSeconds: 7,
   sections: [section],
 }
@@ -44,13 +45,15 @@ describe('fileSettingsReducer', () => {
     expect(state.fileSettings).toEqual({
       fileLabel: 'practice.mp4',
       globalSpeed: 1,
+      loopEnabled: true,
       seekStepSeconds: 2,
       sections: [],
     })
     expect(state.loadedMedia).toBe(media)
+    expect(state.isLoopEnabled).toBe(true)
   })
 
-  it('loads saved settings and resets transient selection state', () => {
+  it('loads saved settings and resets transient playback state to loop on', () => {
     const state = fileSettingsReducer(
       {
         loadedMedia: null,
@@ -67,7 +70,7 @@ describe('fileSettingsReducer', () => {
 
     expect(state.fileSettings).toEqual(settings)
     expect(state.selectedSectionId).toBeNull()
-    expect(state.isLoopEnabled).toBe(false)
+    expect(state.isLoopEnabled).toBe(true)
   })
 
   it('adds a normalized section and selects it', () => {
@@ -186,7 +189,7 @@ describe('fileSettingsReducer', () => {
         loadedMedia: media,
         fileSettings: settings,
         selectedSectionId: null,
-        isLoopEnabled: false,
+        isLoopEnabled: true,
       },
       {
         type: 'toggleLoop',
@@ -201,7 +204,8 @@ describe('fileSettingsReducer', () => {
       seekStepSeconds: 31,
     })
 
-    expect(loopState.isLoopEnabled).toBe(true)
+    expect(loopState.isLoopEnabled).toBe(false)
+    expect(loopState.fileSettings?.loopEnabled).toBe(false)
     expect(speedState.fileSettings?.globalSpeed).toBe(0.75)
     expect(seekStepState.fileSettings?.seekStepSeconds).toBe(30)
   })

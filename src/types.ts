@@ -43,6 +43,8 @@ export type FileSettings = {
   fileLabel: string
   /** セクション未選択の自由再生時に使う再生速度。 */
   globalSpeed: number
+  /** 選択中セクションの終端で開始位置へ戻すかどうか。 */
+  loopEnabled: boolean
   /** 巻き戻し・早送りボタンと左右キーで移動する秒数。 */
   seekStepSeconds: number
   /** このファイルに登録された練習区間。v1 から常に配列として扱う。 */

@@ -6,6 +6,7 @@ import { useFileSettingsActions, useFileSettingsState } from '@/state/file-setti
 type SectionListProps = {
   currentTime: number
   duration: number
+  isLoopEnabled: boolean
   onSectionActivated: (start: number) => void
 }
 
@@ -37,7 +38,12 @@ function readSeconds(value: string) {
  * 独立した一覧の責務をここに閉じ込め、v1 でセクション配列・選択状態・ループ ON/OFF を
  * 受け取るようになっても App の画面合成を膨らませないために分けている。
  */
-export function SectionList({ currentTime, duration, onSectionActivated }: SectionListProps) {
+export function SectionList({
+  currentTime,
+  duration,
+  isLoopEnabled,
+  onSectionActivated,
+}: SectionListProps) {
   const { fileSettings, selectedSectionId } = useFileSettingsState()
   const actions = useFileSettingsActions()
   const sections = fileSettings?.sections ?? []
@@ -297,7 +303,7 @@ export function SectionList({ currentTime, duration, onSectionActivated }: Secti
                     <span className="block min-w-0 flex-1 truncate text-sm font-semibold text-studio-text">
                       {section.name}
                     </span>
-                    {isSelected ? (
+                    {isSelected && isLoopEnabled ? (
                       <span className="rounded-full bg-studio-accent px-1.5 py-0.5 text-[0.625rem] font-bold tracking-wide text-studio-accent-contrast">
                         LOOP
                       </span>

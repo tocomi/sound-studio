@@ -1,8 +1,12 @@
+import { Repeat2 } from 'lucide-react'
+
 type TransportProps = {
   currentTime: number
   duration: number
+  isLoopEnabled: boolean
   isPlaying: boolean
   seekStepSeconds: number
+  onLoopToggle: (enabled?: boolean) => void
   onPause: () => void
   onPlay: () => void
   onSeek: (time: number) => void
@@ -31,8 +35,10 @@ function formatTime(time: number) {
 export function Transport({
   currentTime,
   duration,
+  isLoopEnabled,
   isPlaying,
   seekStepSeconds,
+  onLoopToggle,
   onPause,
   onPlay,
   onSeek,
@@ -123,6 +129,21 @@ export function Transport({
             </span>
           </button>
         </div>
+        <button
+          className={
+            isLoopEnabled
+              ? 'flex h-9 touch-manipulation items-center gap-1.5 rounded-md bg-studio-accent px-3 text-sm font-semibold text-studio-accent-contrast transition hover:bg-studio-accent-hover focus-visible:ring-2 focus-visible:ring-studio-border-strong focus-visible:ring-offset-2 focus-visible:ring-offset-studio-surface focus-visible:outline-none motion-reduce:transition-none'
+              : 'flex h-9 touch-manipulation items-center gap-1.5 rounded-md border border-studio-border bg-studio-surface-raised px-3 text-sm font-semibold text-studio-text-muted transition hover:border-studio-border-strong hover:bg-studio-surface-muted focus-visible:ring-2 focus-visible:ring-studio-border-strong focus-visible:ring-offset-2 focus-visible:ring-offset-studio-surface focus-visible:outline-none motion-reduce:transition-none'
+          }
+          type="button"
+          aria-label={isLoopEnabled ? '区間ループをOFFにする' : '区間ループをONにする'}
+          aria-pressed={isLoopEnabled}
+          title={isLoopEnabled ? 'Loop ON' : 'Loop OFF'}
+          onClick={() => onLoopToggle()}
+        >
+          <Repeat2 aria-hidden="true" size={16} strokeWidth={2.2} />
+          <span>Loop</span>
+        </button>
       </div>
     </section>
   )

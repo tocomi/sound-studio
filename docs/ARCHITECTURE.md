@@ -44,6 +44,7 @@ UI コンポーネントは `currentTime` を直接 React state に持たず、`
   type FileSettings = {
     fileLabel: string        // 表示用のファイル名（マッチングには使わない）
     globalSpeed: number      // セクション未選択時の速度
+    loopEnabled: boolean     // 選択中セクションを区間ループするか
     seekStepSeconds: number  // 巻き戻し・早送りの秒数
     sections: Section[]
   }
