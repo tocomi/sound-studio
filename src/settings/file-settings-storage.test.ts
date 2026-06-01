@@ -35,6 +35,7 @@ const file = { name: 'practice.mp4', size: 12345, lastModified: 67890 }
 const settings: FileSettings = {
   fileLabel: 'practice.mp4',
   globalSpeed: 0.8,
+  seekStepSeconds: 10,
   sections: [
     {
       id: 'section-1',
@@ -67,6 +68,24 @@ describe('file settings storage', () => {
     storage.setItem(fileKey(file), '{broken')
 
     expect(loadFileSettings(storage, file)).toBeNull()
+  })
+
+  it('loads legacy settings without seek step seconds', () => {
+    storage.setItem(
+      fileKey(file),
+      JSON.stringify({
+        fileLabel: 'practice.mp4',
+        globalSpeed: 0.8,
+        sections: [],
+      }),
+    )
+
+    expect(loadFileSettings(storage, file)).toEqual({
+      fileLabel: 'practice.mp4',
+      globalSpeed: 0.8,
+      seekStepSeconds: 2,
+      sections: [],
+    })
   })
 
   it('returns null when the saved shape is invalid', () => {

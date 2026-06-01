@@ -10,6 +10,7 @@ import { VolumeControl } from '@/components/volume-control/volume-control.tsx'
 import { useKeyboardShortcuts } from '@/player/use-keyboard-shortcuts.ts'
 import { usePlayer } from '@/player/use-player.ts'
 import { useVolumePreference } from '@/player/use-volume-preference.ts'
+import { DEFAULT_SEEK_STEP_SECONDS } from '@/settings/file-settings-defaults.ts'
 import { useFileSettingsActions, useFileSettingsState } from '@/state/file-settings-provider.tsx'
 import { selectedSection } from '@/state/file-settings-reducer.ts'
 import { useTheme } from '@/theme/use-theme.ts'
@@ -21,12 +22,12 @@ import { useTheme } from '@/theme/use-theme.ts'
  */
 function App() {
   const [mediaElement, setMediaElement] = useState<HTMLMediaElement | null>(null)
-  const [seekStepSeconds, setSeekStepSeconds] = useState(5)
   const fileSettingsState = useFileSettingsState()
   const fileSettingsActions = useFileSettingsActions()
   const { fileSettings, loadedMedia } = fileSettingsState
   const activeSection = selectedSection(fileSettingsState)
   const playbackRate = activeSection?.speed ?? fileSettings?.globalSpeed ?? 1
+  const seekStepSeconds = fileSettings?.seekStepSeconds ?? DEFAULT_SEEK_STEP_SECONDS
   const { themeMode, toggleThemeMode } = useTheme()
   const volumePreference = useVolumePreference()
   const player = usePlayer(
@@ -102,7 +103,7 @@ function App() {
                 onSeek={player.seek}
                 onSeekBackward={() => player.seekBy(-seekStepSeconds)}
                 onSeekForward={() => player.seekBy(seekStepSeconds)}
-                onSeekStepSecondsChange={setSeekStepSeconds}
+                onSeekStepSecondsChange={fileSettingsActions.setSeekStepSeconds}
               />
               <div className="grid gap-3 lg:grid-cols-[max-content_minmax(18rem,1fr)]">
                 <SpeedControl

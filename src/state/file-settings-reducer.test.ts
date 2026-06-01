@@ -29,6 +29,7 @@ const section: Section = {
 const settings: FileSettings = {
   fileLabel: 'practice.mp4',
   globalSpeed: 0.9,
+  seekStepSeconds: 7,
   sections: [section],
 }
 
@@ -43,6 +44,7 @@ describe('fileSettingsReducer', () => {
     expect(state.fileSettings).toEqual({
       fileLabel: 'practice.mp4',
       globalSpeed: 1,
+      seekStepSeconds: 2,
       sections: [],
     })
     expect(state.loadedMedia).toBe(media)
@@ -178,7 +180,7 @@ describe('fileSettingsReducer', () => {
     ).toBeNull()
   })
 
-  it('updates loop and global speed state', () => {
+  it('updates loop, global speed, and seek step state', () => {
     const loopState = fileSettingsReducer(
       {
         loadedMedia: media,
@@ -194,9 +196,14 @@ describe('fileSettingsReducer', () => {
       type: 'setGlobalSpeed',
       speed: 0.75,
     })
+    const seekStepState = fileSettingsReducer(speedState, {
+      type: 'setSeekStepSeconds',
+      seekStepSeconds: 31,
+    })
 
     expect(loopState.isLoopEnabled).toBe(true)
     expect(speedState.fileSettings?.globalSpeed).toBe(0.75)
+    expect(seekStepState.fileSettings?.seekStepSeconds).toBe(30)
   })
 })
 

@@ -1,6 +1,8 @@
 import { fileKey } from '@/lib/file-key.ts'
 import type { FileSettings, Section } from '@/types.ts'
 
+import { DEFAULT_SEEK_STEP_SECONDS } from './file-settings-defaults.ts'
+
 type FileSettingsStorage = Pick<Storage, 'getItem' | 'setItem'>
 type FileSettingsSource = Parameters<typeof fileKey>[0]
 
@@ -34,9 +36,17 @@ function isFileSettings(value: unknown): value is FileSettings {
   return (
     typeof settings.fileLabel === 'string' &&
     isFiniteNumber(settings.globalSpeed) &&
+    (settings.seekStepSeconds === undefined || isFiniteNumber(settings.seekStepSeconds)) &&
     Array.isArray(settings.sections) &&
     settings.sections.every(isSection)
   )
+}
+
+function normalizeStoredFileSettings(settings: FileSettings): FileSettings {
+  return {
+    ...settings,
+    seekStepSeconds: settings.seekStepSeconds ?? DEFAULT_SEEK_STEP_SECONDS,
+  }
 }
 
 /**
@@ -52,7 +62,7 @@ export function loadFileSettings(storage: FileSettingsStorage, file: FileSetting
 
   try {
     const parsedValue: unknown = JSON.parse(savedValue)
-    return isFileSettings(parsedValue) ? parsedValue : null
+    return isFileSettings(parsedValue) ? normalizeStoredFileSettings(parsedValue) : null
   } catch {
     return null
   }

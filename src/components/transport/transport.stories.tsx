@@ -11,7 +11,7 @@ const meta = {
     currentTime: 42,
     duration: 213,
     isPlaying: false,
-    seekStepSeconds: 5,
+    seekStepSeconds: 2,
     onPause: fn(),
     onPlay: fn(),
     onSeek: fn(),

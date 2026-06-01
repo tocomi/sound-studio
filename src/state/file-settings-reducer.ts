@@ -1,6 +1,11 @@
+import {
+  DEFAULT_GLOBAL_SPEED,
+  DEFAULT_SEEK_STEP_SECONDS,
+  MAX_SEEK_STEP_SECONDS,
+  MIN_SEEK_STEP_SECONDS,
+} from '@/settings/file-settings-defaults.ts'
 import type { FileSettings, LoadedMedia, Section } from '@/types.ts'
 
-const DEFAULT_GLOBAL_SPEED = 1
 const DEFAULT_SECTION_LENGTH = 8
 
 export type FileSettingsState = {
@@ -46,6 +51,10 @@ export type FileSettingsAction =
       type: 'setGlobalSpeed'
       speed: number
     }
+  | {
+      type: 'setSeekStepSeconds'
+      seekStepSeconds: number
+    }
 
 export const initialFileSettingsState: FileSettingsState = {
   loadedMedia: null,
@@ -64,6 +73,14 @@ function clamp(value: number, min: number, max: number) {
 
 function normalizeSpeed(speed: number) {
   return Number.isFinite(speed) && speed > 0 ? speed : DEFAULT_GLOBAL_SPEED
+}
+
+function normalizeSeekStepSeconds(seekStepSeconds: number) {
+  if (!Number.isFinite(seekStepSeconds)) {
+    return DEFAULT_SEEK_STEP_SECONDS
+  }
+
+  return clamp(Math.round(seekStepSeconds), MIN_SEEK_STEP_SECONDS, MAX_SEEK_STEP_SECONDS)
 }
 
 function normalizeSection(section: Section, duration?: number): Section {
@@ -98,6 +115,7 @@ function createInitialSettings(media: LoadedMedia): FileSettings {
   return {
     fileLabel: media.file.name,
     globalSpeed: DEFAULT_GLOBAL_SPEED,
+    seekStepSeconds: DEFAULT_SEEK_STEP_SECONDS,
     sections: [],
   }
 }
@@ -106,6 +124,7 @@ function normalizeSettings(settings: FileSettings, duration?: number): FileSetti
   return {
     fileLabel: settings.fileLabel,
     globalSpeed: normalizeSpeed(settings.globalSpeed),
+    seekStepSeconds: normalizeSeekStepSeconds(settings.seekStepSeconds),
     sections: settings.sections.map((section) => normalizeSection(section, duration)),
   }
 }
@@ -214,6 +233,20 @@ export function fileSettingsReducer(
         fileSettings: {
           ...state.fileSettings,
           globalSpeed: normalizeSpeed(action.speed),
+        },
+      }
+    }
+
+    case 'setSeekStepSeconds': {
+      if (!state.fileSettings) {
+        return state
+      }
+
+      return {
+        ...state,
+        fileSettings: {
+          ...state.fileSettings,
+          seekStepSeconds: normalizeSeekStepSeconds(action.seekStepSeconds),
         },
       }
     }

@@ -20,6 +20,7 @@ type FileSettingsContextValue = {
     selectSection: (id: string | null) => void
     toggleLoop: (enabled?: boolean) => void
     setGlobalSpeed: (speed: number) => void
+    setSeekStepSeconds: (seekStepSeconds: number) => void
   }
 }
 
@@ -126,6 +127,8 @@ export function FileSettingsProvider({ children }: React.PropsWithChildren) {
           selectSection: (id) => dispatchAction({ type: 'selectSection', id }),
           toggleLoop: (enabled) => dispatchAction({ type: 'toggleLoop', enabled }),
           setGlobalSpeed: (speed) => dispatchAction({ type: 'setGlobalSpeed', speed }),
+          setSeekStepSeconds: (seekStepSeconds) =>
+            dispatchAction({ type: 'setSeekStepSeconds', seekStepSeconds }),
         },
       }}
     >

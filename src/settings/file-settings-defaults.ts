@@ -1,0 +1,4 @@
+export const DEFAULT_GLOBAL_SPEED = 1
+export const DEFAULT_SEEK_STEP_SECONDS = 2
+export const MIN_SEEK_STEP_SECONDS = 1
+export const MAX_SEEK_STEP_SECONDS = 30
